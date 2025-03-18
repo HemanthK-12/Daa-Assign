@@ -52,12 +52,31 @@ emcc main.cpp -o main.js -s WASM=1 -s NO_EXIT_RUNTIME=1 -s "EXPORTED_RUNTIME_MET
 ```
 
 ```
+Assigned Papers for implementing maximal clique enumeration.
+Please form a group of 5. 
+Please write your group info in the shared sheet.
+https://docs.google.com/spreadsheets/d/1D5zVsx8QyBPYgda2-snLm_yJmKobd41FStk6mwymu58/edit?usp=sharing
+
+Please start reading the papers and implement the algorithms. More details will be posted soon.
+
+Assignment Description:
+https://docs.google.com/document/d/1bVLHY6aKS5bJuHJ_ML2qOB4gMdD0zkCAA_0nNVBXmaw/edit?usp=sharing
+
+Dataset:
+1. https://snap.stanford.edu/data/email-Enron.html
+2. https://snap.stanford.edu/data/as-Skitter.html
+3. https://snap.stanford.edu/data/wiki-Vote.html
+
+Execute your implementations on these datasets and report the differences in execution times of the three algorithms. 
+
 Include the following in your report:
 1. Largest size of the clique in each dataset.
 2. Total number of maximal cliques in each dataset.
 3. Execution time of your implementation on each dataset (histogram).
 4. Distribution of different size cliques (histogram).
 
+Please submit your project by 23rd March.
+Submission Link: https://drive.google.com/drive/folders/1rVIqC9ErSnxa43UsnLCLZu89HRIIfryy?usp=sharing
 Include the following in your submission.
 
 1. C/C++ implementation of all three algorithms.
@@ -65,4 +84,8 @@ Include the following in your submission.
 3. A detailed report describing the algorithms and experimental observation mentioned above.
 4. Include your project webpage's link (Github or other) in the Readme. On the project page, include the experimental observations and any other observations you have.
 5. (Optional) Mention if you find an interesting application where you can solve the problem using clique enumeration and counting. That way, we can think about possible publication! Email me if you (and your group) have any such ideas.
+
+
+Thanks,
+Apurba
 ```
