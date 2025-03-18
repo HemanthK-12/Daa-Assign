@@ -36,13 +36,13 @@ vector<int> findDegeneracyOrdering(int vertices,vector<pair<int,int>>& edges)
     }
     vector<int> degree(vertices+1);
     int maxDeg = 0;
-    for (int i = 1; i <= vertices; i++)
+    for (int i = 0; i < vertices; i++)
     {
         degree[i]=graph[i].size();//no. of elements in adjacency list of that element=neighbours=degree
         maxDeg=max(maxDeg,degree[i]);
     }
     vector<list<int>> buckets(maxDeg+1);//each bucket correspods to all the vertices removed while progressing from k-core to k+1 core of the graph
-    for (int i = 1; i <= vertices; i++)
+    for (int i = 0; i < vertices; i++)
         buckets[degree[i]].push_back(i);
     vector<bool> removed(vertices+1,false);
     vector<int> ordering;
@@ -116,7 +116,7 @@ int bronKerboschDegeneracy(int vertices,vector<pair<int,int>>& edges)//& only be
     //first we find degeneracy ordering which will be passed as input to bronKerboschpivoting function
     vector<int> ordering=findDegeneracyOrdering(vertices,edges);
     set<int> P,R,X; //used vector first but should eliminate duplicates so set best option
-    for (int i=1;i<vertices+1;i++)//if ordering is not continuous, should add map here instead of inserting i
+    for (int i=0;i<vertices;i++)//if ordering is not continuous, should add map here instead of inserting i
         P.insert(i);
     int count=0;//only prints total number of cliques
 
@@ -139,14 +139,18 @@ int bronKerboschDegeneracy(int vertices,vector<pair<int,int>>& edges)//& only be
 }
 
 int main() {
+    ifstream inputFile("./datasets/email-Enron.txt");
     int verticesNumber,edgesNumber;
     cout<<"Enter number of vertices and edges: \n";
-    cin>>verticesNumber>>edgesNumber;
+    // cin>>verticesNumber>>edgesNumber;
+    inputFile >> verticesNumber >> edgesNumber;
+    cout<<verticesNumber<<" "<<edgesNumber<<endl;
     vector<pair<int,int>> edges;
     for (int i=0;i<edgesNumber;i++)
     {
         int a,b;
-        cin>>a>>b;
+        // cin>>a>>b;
+        inputFile>>a>>b;
         edges.push_back({a,b});
     }
     cout<<"final no. of cliques with edited bron kerbosch"<<bronKerboschDegeneracy(verticesNumber,edges)<<endl;
