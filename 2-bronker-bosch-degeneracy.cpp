@@ -158,6 +158,26 @@ int bronKerboschDegeneracy(int vertices)//& only because giving pointer deferenc
         bronKerboschPivot({ordering[i]}, newP, newX,count);
         P.erase(ordering[i]);
         X.insert(ordering[i]);
+                if (P.count(u))
+                    newP.insert(u);
+                if (X.count(u))
+                    newX.insert(u);
+            }
+        }
+        bronKerboschPivot({ordering[i]}, newP, newX,count);
+        P.erase(ordering[i]);
+        X.insert(ordering[i]);
+    }
+    return count;
+}
+
+int main() {
+    auto start = chrono::high_resolution_clock::now();
+    int choice;
+    cout<<"Enter the dataset number : \n1 for Enron email network\n2 for Wiki-Vote network \n3 for Skitter\n";
+    cin>>choice;
+    ifstream inputFile;
+    if(choice==1)
     }
     return count;
 }
