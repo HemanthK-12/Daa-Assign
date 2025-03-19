@@ -1,2 +1,5 @@
 emsdk/
 
+datasets/as-skitter.txt
+datasets/email-Enron.txt
+datasets/wiki-Vote.txt
