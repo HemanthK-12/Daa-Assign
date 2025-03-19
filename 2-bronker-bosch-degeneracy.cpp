@@ -26,133 +26,191 @@
 
 #include <bits/stdc++.h>
 using namespace std;
-
-vector<int> findDegeneracyOrdering(int vertices,vector<pair<int,int>>& edges)
-{
-    vector<vector<int>> graph(vertices+1);//since 1 based indexing
-    for (auto [u,v]:edges) {
-        graph[u].push_back(v);
-        graph[v].push_back(u);
+map<int,set<int>> graph;
+set<int> nodes;
+int maxCliqueSize = 0;
+int numCliques = 0;
+map<int, int> cliqueSizeDistribution;
+vector<int> findDegeneracyOrdering(int vertices) {
+    // Check if nodes is empty
+    if (nodes.empty()) {
+        return vector<int>();
     }
-    vector<int> degree(vertices+1);
+
+    map<int,int> degree;
     int maxDeg = 0;
-    for (int i = 0; i < vertices; i++)
-    {
-        degree[i]=graph[i].size();//no. of elements in adjacency list of that element=neighbours=degree
-        maxDeg=max(maxDeg,degree[i]);
+    
+    // Calculate degrees and find max degree
+    for (int v : nodes) {
+        if (graph.find(v) != graph.end()) {
+            degree[v] = graph[v].size();
+            maxDeg = max(maxDeg, degree[v]);
+        }
     }
-    vector<list<int>> buckets(maxDeg+1);//each bucket correspods to all the vertices removed while progressing from k-core to k+1 core of the graph
-    for (int i = 0; i < vertices; i++)
-        buckets[degree[i]].push_back(i);
-    vector<bool> removed(vertices+1,false);
-    vector<int> ordering;
-    ordering.reserve(vertices);// says that minimum "vertices" number of indices should be there, see here : https://cplusplus.com/reference/vector/vector/reserve/
 
-    for (int i=0;i<vertices;i++)
-    {
-        int d=0;
-        while(d <= maxDeg && buckets[d].empty())
+    // Initialize buckets with proper size
+    vector<list<int>> buckets(maxDeg + 1);
+    
+    // Fill buckets safely
+    for (int v : nodes) {
+        if (graph.find(v) != graph.end()) {
+            buckets[degree[v]].push_back(v);
+        }
+    }
+
+    // Use nodes.size() instead of vertices parameter
+    vector<bool> removed(nodes.size() * 2, false);  // Make it bigger to be safe
+    vector<int> ordering;
+    ordering.reserve(nodes.size());
+
+    // Main degeneracy loop
+    while (ordering.size() < nodes.size()) {
+        int d = 0;
+        while (d <= maxDeg && buckets[d].empty()) {
             d++;
-        int v=buckets[d].front();
+        }
+        
+        if (d > maxDeg) break;  // Safety check
+        
+        int v = buckets[d].front();
         buckets[d].pop_front();
-        removed[v]=true;
+        removed[v] = true;
         ordering.push_back(v);
-        for (int u : graph[v])
-        {
-            if (!removed[u])
-            {
-                buckets[degree[u]].remove(u);
-                degree[u]--;
-                buckets[degree[u]].push_back(u);
+
+        // Update neighbors
+        if (graph.find(v) != graph.end()) {
+            for (int u : graph[v]) {
+                if (!removed[u] && graph.find(u) != graph.end()) {
+                    buckets[degree[u]].remove(u);
+                    degree[u]--;
+                    if (degree[u] >= 0) {  // Safety check
+                        buckets[degree[u]].push_back(u);
+                    }
+                }
             }
         }
     }
+
     return ordering;
 }
-void bronKerboschPivot(set<int> R, set<int> P, set<int> X, const vector<vector<int>>& graph, int& count/*reference here coz we are making changes in the count variable in bronkerboschdegeneracy method*/) {
+void bronKerboschPivot(set<int> R, set<int> P, set<int> X,int& count/*reference here coz we are making changes in the count variable in bronkerboschdegeneracy method*/) {
     //if there are no common elements and we are only left with all vertices with degree>=d, we say that is maximal clique
     if (P.empty() && X.empty())
     {
-        cout << "\nMaximal Clique: \n";
-        for (int v:R)
-            cout << v << " ";
+        int cliqueSize = R.size();
+        maxCliqueSize = max(maxCliqueSize, cliqueSize);
+        cliqueSizeDistribution[cliqueSize]++;
+        numCliques++;
         count++;
         return;
     }
     //we use pivoting to randomly pick the top element of the set so that we stop recursive calls when we reach there
     int pivot=*P.begin();
     for (int v : P)
-        if (graph[v].size()>graph[pivot].size())
+        if (graph.at(v).size()>graph.at(pivot).size())
             pivot=v;
     set<int> non_neighbors;
     for (int v : P)
-        if (find(graph[pivot].begin(),graph[pivot].end(),v)==graph[pivot].end())//used graph[pivot].find(x) but apparently not supported by #include<its/stdc++.h>, only by #include<algorithm>
+        if (graph.find(pivot) != graph.end() && find(graph.at(pivot).begin(), graph.at(pivot).end(), v) == graph.at(pivot).end())
             non_neighbors.insert(v);
     //below is same as bronKerboschDegeneracy ka recursive step
     for (int v : non_neighbors) {
         set<int> newR=R;
         set<int> newP,newX;
         newR.insert(v);
-        for (int u : graph[v])
+        for (int u : graph.at(v))
         {
             if (P.count(u))
                 newP.insert(u);
             if (X.count(u))
                 newX.insert(u);
         }
-        bronKerboschPivot(newR,newP,newX,graph,count);
+        bronKerboschPivot(newR,newP,newX,count);
         P.erase(v);
         X.insert(v);
     }
 }
 
-int bronKerboschDegeneracy(int vertices,vector<pair<int,int>>& edges)//& only because giving pointer deferenceing exception
+int bronKerboschDegeneracy(int vertices)//& only because giving pointer deferenceing exception
 {
-    vector<vector<int>> graph(vertices+1);
-    for (auto [u,v]:edges) {
-        graph[u].push_back(v);
-        graph[v].push_back(u);
-    }
+
     //first we find degeneracy ordering which will be passed as input to bronKerboschpivoting function
-    vector<int> ordering=findDegeneracyOrdering(vertices,edges);
+    vector<int> ordering=findDegeneracyOrdering(vertices);
     set<int> P,R,X; //used vector first but should eliminate duplicates so set best option
-    for (int i=0;i<vertices;i++)//if ordering is not continuous, should add map here instead of inserting i
-        P.insert(i);
+    for (int v : ordering) {
+        P.insert(v);
+    }
     int count=0;//only prints total number of cliques
 
-    for (int i=0;i<ordering.size();i++)
+    for (int i = 0; i < ordering.size(); i++)
     {
-        set<int> newP,newX;
-        for (int u:graph[ordering[i]])//this iterates over all neighbours of the ith vertex in ordering
+        set<int> newP, newX;
+        if (graph.find(ordering[i]) != graph.end())
         {
-            //see if they are in both the {neighbours} set and {all vertices after ith vertex in ordering} set.
-            if (P.count(u))
-                newP.insert(u);
-            if (X.count(u))
-                newX.insert(u);
+            for (int u : graph.at(ordering[i]))
+            {
+                if (P.count(u))
+                    newP.insert(u);
+                if (X.count(u))
+                    newX.insert(u);
+            }
         }
-        bronKerboschPivot({ordering[i]}, newP, newX, graph, count);//we keep on iterating till we go to a leaf node where neighbours is either 1/0, then P&X will be empty and then we'll break from recursive step
+        bronKerboschPivot({ordering[i]}, newP, newX,count);
         P.erase(ordering[i]);
-        X.insert(ordering[i]);//to mark that we won't be using this vertex, i.e. this is visited, we add it to X to remind it should be excluded
+        X.insert(ordering[i]);
     }
     return count;
 }
 
 int main() {
-    ifstream inputFile("./datasets/email-Enron.txt");
-    int verticesNumber,edgesNumber;
-    cout<<"Enter number of vertices and edges: \n";
-    // cin>>verticesNumber>>edgesNumber;
-    inputFile >> verticesNumber >> edgesNumber;
-    cout<<verticesNumber<<" "<<edgesNumber<<endl;
-    vector<pair<int,int>> edges;
-    for (int i=0;i<edgesNumber;i++)
+    auto start = chrono::high_resolution_clock::now();
+    int choice;
+    cout<<"Enter the dataset number : \n1 for Enron email network\n2 for Wiki-Vote network \n3 for Skitter\n";
+    cin>>choice;
+    ifstream inputFile;
+    if(choice==1)
     {
-        int a,b;
-        // cin>>a>>b;
-        inputFile>>a>>b;
-        edges.push_back({a,b});
+        inputFile.open("./datasets/wiki-Vote.txt");
+        string line;
+        for(int i = 0; i < 4; i++)
+            getline(inputFile, line);
     }
-    cout<<"final no. of cliques with edited bron kerbosch"<<bronKerboschDegeneracy(verticesNumber,edges)<<endl;
+    else if(choice==2)
+    {
+        inputFile.open("./datasets/email-Enron.txt");
+        string line;
+        for(int i = 0; i < 4; i++)
+            getline(inputFile, line);
+    }
+    else
+    {
+        inputFile.open("./datasets/as-skitter.txt");
+        string line;
+        for(int i = 0; i < 5; i++)
+            getline(inputFile, line);
+    }
+    int u, v;maxCliqueSize = 0;numCliques = 0;cliqueSizeDistribution.clear();
+    if (inputFile.is_open()) {
+        while (inputFile >> u >> v) {
+            graph[u].insert(v);  
+            graph[v].insert(u);
+            nodes.insert(u);
+            nodes.insert(v);
+        }
+        inputFile.close();
+    }
+    cout << "Nodes: " << nodes.size() << endl;
+    cout << "Edges: " << graph.size() << endl;
+    int totalCliques = bronKerboschDegeneracy(nodes.size());
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "\n=== Results ===\n";
+    cout << "1. Largest clique size: " << maxCliqueSize << endl;
+    cout << "2. Total number of maximal cliques: " << numCliques << endl;
+    cout << "3. Execution time: " << duration.count() << " seconds\n";
+    cout << "4. Clique size distribution:\n";
+    for(const auto& pair : cliqueSizeDistribution) {
+        cout << "   Size " << pair.first << ": " << pair.second << " cliques\n";
+    }
     return 0;
 }
