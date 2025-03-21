@@ -2,27 +2,26 @@
 #include <vector>
 #include <algorithm>
 #include <set>
-#include <unordered_set>
+#include <map>
 #include <fstream>
 using namespace std;
 
 // Graph representation using adjacency lists
 vector<vector<int>> graph;
-// Keep set for uniqueCliques since unordered_set doesn't work well with sets as elements
+// Use a set of sets to automatically avoid duplicates
 set<set<int>> uniqueCliques;
-unordered_set<int> C = {0};
 int iterationCount = 0,n;  // Add this counter
 
 // Helper arrays
 vector<int> T, S;
 vector<int> degree;
-vector<int> old_to_new; // Maps original vertex numbers to 0...n-1
-vector<int> new_to_old; // Maps 0...n-1 to original vertex numbers
+map<int, int> old_to_new; // Maps original vertex numbers to 0...n-1
+map<int, int> new_to_old; // Maps 0...n-1 to original vertex numbers
 
 // Helper function to compute C ∩ N(i)
-unordered_set<int> compute_C_intersect_Ni(int i)
+set<int> compute_C_intersect_Ni(const set<int> &C, int i)
 {
-    unordered_set<int> C_inter_Ni;
+    set<int> C_inter_Ni;
     for (int v : C)
     {
         for (int neighbor : graph[i])
@@ -38,9 +37,9 @@ unordered_set<int> compute_C_intersect_Ni(int i)
 }
 
 // Helper function to compute C - N(i)
-unordered_set<int> compute_C_minus_Ni(int i)
+set<int> compute_C_minus_Ni(const set<int> &C, int i)
 {
-    unordered_set<int> C_minus_Ni;
+    set<int> C_minus_Ni;
     for (int v : C)
     {
         bool isNeighbor = false;
@@ -61,7 +60,7 @@ unordered_set<int> compute_C_minus_Ni(int i)
 }
 
 // Helper function to compute T[y] = |N(y) ∩ C ∩ N(i)| for y ∈ V - C - {i}
-void compute_T(const unordered_set<int> &C_inter_Ni, int i)
+void compute_T(const set<int> &C_inter_Ni, const set<int> &C,int i)
 {
     fill(T.begin(), T.end(), 0);
     for (int x : C_inter_Ni)
@@ -78,7 +77,7 @@ void compute_T(const unordered_set<int> &C_inter_Ni, int i)
 }
 
 // Helper function to compute S[y] = |N(y) ∩ (C - N(i))| for y ∈ V - C
-void compute_S(const unordered_set<int> &C_minus_Ni)
+void compute_S(const set<int> &C_minus_Ni, const set<int> &C)
 {
     fill(S.begin(), S.end(), 0);
     for (int x : C_minus_Ni)
@@ -94,7 +93,7 @@ void compute_S(const unordered_set<int> &C_minus_Ni)
 }
 
 // Helper function to perform the maximality test (Step 4)
-bool is_maximal(const unordered_set<int> &C_inter_Ni,int i)
+bool is_maximal(const set<int> &C_inter_Ni, const set<int> &C, int i)
 {
     for (int y = 0; y < i; y++)
     {
@@ -116,7 +115,7 @@ bool is_maximal(const unordered_set<int> &C_inter_Ni,int i)
 }
 
 // Helper function to perform the lexicographical test (Steps 5-7)
-bool is_lexicographically_largest(const unordered_set<int> &C_minus_Ni, const unordered_set<int> &C_inter_Ni,int i)
+bool is_lexicographically_largest(const set<int> &C_minus_Ni, const set<int> &C_inter_Ni,const set<int> &C, int i)
 {
     vector<int> sorted_C_minus_Ni(C_minus_Ni.begin(), C_minus_Ni.end());
     sort(sorted_C_minus_Ni.begin(), sorted_C_minus_Ni.end());
@@ -182,43 +181,44 @@ bool is_lexicographically_largest(const unordered_set<int> &C_minus_Ni, const un
 }
 
 // Update procedure of the TIAS algorithm
-void UPDATE(int i)
+void UPDATE(int i, set<int> &C)
 {
     if (i == n)
     {
-        // Convert unordered_set to set before inserting into uniqueCliques
-        set<int> ordered_C(C.begin(), C.end());
-        uniqueCliques.insert(ordered_C);
+        // Found a new maximal clique
+        uniqueCliques.insert(C);
         iterationCount++;
-        cout << iterationCount << endl;
+        cout  << iterationCount<<endl ;
         return;
+        // set<int> C_inter_Ni = compute_C_intersect_Ni(C, i);
+        // set<int> C_minus_Ni = compute_C_minus_Ni(C, i);
     }
     else
     {
     // Compute C ∩ N(i) and C - N(i)
-        // unordered_set<int> C_inter_Ni = compute_C_intersect_Ni(C, i);
-        // unordered_set<int> C_minus_Ni = compute_C_minus_Ni(C, i);
+        // set<int> C_inter_Ni = compute_C_intersect_Ni(C, i);
+        // set<int> C_minus_Ni = compute_C_minus_Ni(C, i);
 
         // Step 1: If C - N(i) is not empty, call UPDATE(i+1, C)
-        if (!compute_C_minus_Ni(i).empty())
+        if (!compute_C_minus_Ni(C, i).empty())
         {
-            UPDATE(i + 1);
+            UPDATE(i + 1, C);
         }
-        unordered_set<int> C_inter_Ni = compute_C_intersect_Ni(i);
-        unordered_set<int> C_minus_Ni = compute_C_minus_Ni(i);
+        set<int> C_inter_Ni = compute_C_intersect_Ni(C, i);
+        set<int> C_minus_Ni = compute_C_minus_Ni(C, i);
         // Compute T and S arrays (i == n+1)
-        compute_T(C_inter_Ni, i);
-        compute_S(C_minus_Ni);
+        compute_T(C_inter_Ni, C, i);
+        compute_S(C_minus_Ni, C);
 
         // Perform maximality and lexicographical tests
-        bool FLAG = is_maximal(C_inter_Ni, i) && is_lexicographically_largest(C_minus_Ni, C_inter_Ni,i);
+        bool FLAG = is_maximal(C_inter_Ni, C, i) && is_lexicographically_largest(C_minus_Ni, C_inter_Ni,C, i);
         // Step 10: If FLAG is true, add i to C and recursively call UPDATE
         if (FLAG)
         {
-            unordered_set<int> SAVE = C_minus_Ni;
+            set<int> SAVE = C_minus_Ni;
             C = C_inter_Ni;
             C.insert(i);
-            UPDATE(i + 1);
+            UPDATE(i + 1, C);
             C.erase(i);
             for (int v : SAVE)
             {
@@ -232,7 +232,7 @@ int main()
 {
     ifstream infile("./input.txt");
     string line;
-    unordered_set<int> unique_vertices;
+    set<int> unique_vertices;
     vector<pair<int, int>> edges;
 
     if (!infile.is_open())
@@ -254,10 +254,6 @@ int main()
 
     // Initialize graph with size n (for 0-based indexing)
     graph.resize(n);
-
-    // Initialize vectors for mapping
-    old_to_new.resize(*max_element(unique_vertices.begin(), unique_vertices.end()) + 1, -1);
-    new_to_old.resize(n);
 
     // Create mapping for vertices
     int new_id = 0;
@@ -291,8 +287,8 @@ int main()
     sort(vertices.begin(), vertices.end());
 
     // Create new mappings after degree-based reordering
-    vector<int> degree_old_to_new(n);
-    vector<int> degree_new_to_old(n);
+    map<int, int> degree_old_to_new;
+    map<int, int> degree_new_to_old;
     vector<vector<int>> new_graph(n);
 
     for (int i = 0; i < n; i++)
@@ -319,9 +315,10 @@ int main()
     S.resize(n, 0);
 
     // Start with vertex 0
+    set<int> C = {0};
 
     // Call UPDATE starting from vertex 1
-    UPDATE(1);
+    UPDATE(1, C);
 
     // cout << "Maximal Cliques:" << endl;
     // for (const auto &clique : uniqueCliques)

@@ -2,22 +2,30 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include<map>
 #include <unordered_set>
 #include <fstream>
+#include <chrono> // Include chrono for high_resolution_clock
 using namespace std;
+using namespace std::chrono; // Use chrono namespace
 
 // Graph representation using adjacency lists
 vector<vector<int>> graph;
 // Keep set for uniqueCliques since unordered_set doesn't work well with sets as elements
 set<set<int>> uniqueCliques;
 unordered_set<int> C = {0};
-int iterationCount = 0,n;  // Add this counter
+int iterationCount = 0, n;  // Add this counter
 
 // Helper arrays
 vector<int> T, S;
 vector<int> degree;
 vector<int> old_to_new; // Maps original vertex numbers to 0...n-1
 vector<int> new_to_old; // Maps 0...n-1 to original vertex numbers
+
+// New variables and structures
+typedef map<int, set<int>> Graph;
+vector<int> CV; // Flag vector: 1 if vertex is in clique C
+auto start = high_resolution_clock::now(); // Start time for performance measurement
 
 // Helper function to compute C ∩ N(i)
 unordered_set<int> compute_C_intersect_Ni(int i)
@@ -317,6 +325,7 @@ int main()
     // Initialize arrays
     T.resize(n, 0);
     S.resize(n, 0);
+    CV.resize(n, 0); // Initialize CV
 
     // Start with vertex 0
 
@@ -335,6 +344,11 @@ int main()
     // }
 
     cout << "Total number of maximal cliques: " << uniqueCliques.size() << endl;
+
+    // Measure and print the elapsed time
+    auto end = high_resolution_clock::now();
+    auto duration = duration_cast<milliseconds>(end - start);
+    cout << "Elapsed time: " << duration.count() << " ms" << endl;
 
     return 0;
 }
