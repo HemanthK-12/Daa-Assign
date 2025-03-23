@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DAA Assignment-1</title>
+    <!-- Add animation libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
         
@@ -222,7 +224,7 @@
         }
         
         button:hover {
-            background-color: #058a3a;
+            background-color: #3bc070;
         }
         
         #answer {
@@ -375,26 +377,29 @@
             }
         }
     </style>
+
+    <!-- Added script for animations and effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
 </head>
 <body>
-    <header>
+    <header class="animate__animated animate__fadeInDown">
         <div class="header-content">
             <a href="#" class="logo">CS F364  -  <span>Design and Analysis of Algorithms</span></a>
         </div>
     </header>
     
-    <section class="banner">
+    <section class="banner animate__animated animate__fadeIn animate__delay-1s">
         <div class="container">
-            <h1>Assignment - 1</h1>
-            <h2>Maximal Clique Enumeration</h2>
+            <h1 class="animate__animated animate__zoomIn animate__delay-1s">Assignment - 1</h1>
+            <h2 class="animate__animated animate__fadeInUp animate__delay-1s">Maximal Clique Enumeration</h2>
         </div>
     </section>
     
-    <main class="container">
+    <main class="container animate__animated animate__fadeIn animate__delay-2s">
         <table class="outer">
             <tr>
                 <td>
-                    <section class="team-section">
+                    <section class="team-section" id="team-section">
                         <h3>Team Members</h3>
                         <table>
                             <tr>
@@ -426,20 +431,202 @@
                 </td>
                 <td>
                     <section class="algorithms">
-                        <div class="btn-container">
-                            <button onclick="location.href='enron.html'">Enron Mail</button>
-                            <button onclick="location.href='skitter.html'">Skitter</button>
-                            <button onclick="location.href='wikivote.html'">Wiki Vote</button>
-                            <button onclick="window.open('https://github.com/HemanthK-12/Daa-Assign', '_blank')">Github Repo</button>
-                            <button onclick="location.href='./static/Report.pdf'">Project Report</button>
+                        <div class="btn-container" id="button-container">
+                            <button class="btn-animated" onclick="location.href='enron.html'">
+                                <span class="btn-text">Enron Mail</span>
+                            </button>
+                            <button class="btn-animated" onclick="location.href='skitter.html'">
+                                <span class="btn-text">Skitter</span>
+                            </button>
+                            <button class="btn-animated" onclick="location.href='wikivote.html'">
+                                <span class="btn-text">Wiki Vote</span>
+                            </button>
+                            <button class="btn-animated" onclick="location.href='wikivote.html'">
+                                <span class="btn-text">Github Repo</span>
+                            </button>
+                            <button class="btn-animated" onclick="location.href='./static/Report.pdf'">
+                                <span class="btn-text">Project Report</span>
+                            </button>
                         </div>
                     </section>
                 </td>
             </tr>
-
         </table>
-
     </main>
     
+    <script>
+        // Initialization code
+        document.addEventListener("DOMContentLoaded", function() {
+            // Button hover effects
+            const buttons = document.querySelectorAll('.btn-animated');
+            
+            buttons.forEach(button => {
+                button.addEventListener('mouseover', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 20px rgba(67, 212, 128, 0.3)';
+                });
+                
+                button.addEventListener('mouseout', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+                
+                button.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.95)';
+                });
+                
+                button.addEventListener('mouseup', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Staggered button animation
+            const buttonContainer = document.getElementById('button-container');
+            const buttonElements = buttonContainer.querySelectorAll('button');
+            
+            gsap.fromTo(buttonElements, 
+                { opacity: 0, y: 50 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    stagger: 0.2,
+                    duration: 0.7,
+                    ease: "power2.out",
+                    delay: 0.5
+                }
+            );
+
+            // Table row animation
+            const tableRows = document.querySelectorAll('tr:not(:first-child)');
+            gsap.fromTo(tableRows, 
+                { opacity: 0, x: -20 },
+                { 
+                    opacity: 1, 
+                    x: 0, 
+                    stagger: 0.15,
+                    duration: 0.5,
+                    delay: 1
+                }
+            );
+
+            // Glow effect for team section
+            const teamSection = document.getElementById('team-section');
+            
+            gsap.to(teamSection, {
+                boxShadow: '0 0 20px rgba(67, 212, 128, 0.5)',
+                duration: 2,
+                repeat: -1,
+                yoyo: true
+            });
+
+            // Animate logo color
+            const logoSpan = document.querySelector('.logo span');
+            
+            gsap.to(logoSpan, {
+                color: '#ffffff',
+                duration: 2,
+                repeat: -1,
+                yoyo: true
+            });
+
+            // Particle background effect
+            createParticles();
+        });
+
+        // Create background particles
+        function createParticles() {
+            const particlesContainer = document.createElement('div');
+            particlesContainer.style.position = 'fixed';
+            particlesContainer.style.top = '0';
+            particlesContainer.style.left = '0';
+            particlesContainer.style.width = '100%';
+            particlesContainer.style.height = '100%';
+            particlesContainer.style.pointerEvents = 'none';
+            particlesContainer.style.zIndex = '-1';
+            document.body.appendChild(particlesContainer);
+
+            // Create particles
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                
+                // Style particles
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 50 + 3 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.backgroundColor = 'rgba(67, 212, 128, ' + (Math.random() * 0.2 + 0.1) + ')';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                
+                // Random positions
+                resetParticle(particle);
+                
+                particlesContainer.appendChild(particle);
+                
+                // Animate particles
+                animateParticle(particle);
+            }
+        }
+
+        function resetParticle(particle) {
+            particle.style.top = Math.random() * 100 + 'vh';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.opacity = '0';
+        }
+
+        function animateParticle(particle) {
+            const duration = Math.random() * 30 + 20;
+            const startY = parseFloat(particle.style.top);
+            
+            gsap.to(particle, {
+                y: -startY - 200,
+                x: (Math.random() - 0.5) * 200,
+                opacity: 0.99,
+                duration: duration / 2,
+                ease: "power1.out",
+                onComplete: () => {
+                    gsap.to(particle, {
+                        opacity: 0,
+                        duration: duration / 2,
+                        onComplete: () => {
+                            resetParticle(particle);
+                            animateParticle(particle);
+                        }
+                    });
+                }
+            });
+        }
+
+        // Button click ripple effect
+        document.querySelectorAll('.btn-animated').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const x = e.clientX - e.target.getBoundingClientRect().left;
+                const y = e.clientY - e.target.getBoundingClientRect().top;
+                
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                ripple.style.position = 'absolute';
+                ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.width = '0';
+                ripple.style.height = '0';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.pointerEvents = 'none';
+                
+                this.appendChild(ripple);
+                
+                gsap.to(ripple, {
+                    width: '300px',
+                    height: '300px',
+                    opacity: 0,
+                    duration: 0.8,
+                    onComplete: () => {
+                        ripple.remove();
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DAA Assignment-1</title>
     <style>
@@ -377,7 +379,7 @@
             </div>
         </div>
         <div class="algorithm-performance">
-            <h4>Algorithm Performance</h4>
+            <h4>Algorithm Performance(sec)</h4>
             <div class="performance-stats">
                 <div class="stat">
                     <p>ELS</p>
@@ -404,5 +406,139 @@
             </table>
         </div>
     </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Performance stats animation
+            const stats = document.querySelectorAll('.stat');
+            gsap.fromTo(stats, 
+                { opacity: 0, y: 50 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    stagger: 0.2,
+                    duration: 0.7,
+                    ease: "power2.out",
+                    delay: 0.5
+                }
+            );
+
+            // Chart container animation
+            const charts = document.querySelectorAll('.chart-container');
+            gsap.fromTo(charts, 
+                { opacity: 0, scale: 0.8 },
+                { 
+                    opacity: 1, 
+                    scale: 1,
+                    duration: 1,
+                    ease: "back.out(1.7)",
+                    delay: 1
+                }
+            );
+
+            // Dataset info boxes animation
+            const infoBoxes = document.querySelectorAll('.info-box');
+            gsap.fromTo(infoBoxes, 
+                { opacity: 0, y: 30 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    stagger: 0.2,
+                    duration: 0.7,
+                    ease: "power2.out",
+                    delay: 0.3
+                }
+            );
+
+            // Glow effect for dataset section
+            const datasetSection = document.querySelector('.dataset-section');
+            gsap.to(datasetSection, {
+                boxShadow: '0 0 20px rgba(67, 212, 128, 0.5)',
+                duration: 2,
+                repeat: -1,
+                yoyo: true
+            });
+
+            // Background particles
+            createParticles();
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".stat strong").forEach((element) => {
+            let endValue = parseFloat(element.innerText);
+            gsap.fromTo(element, { innerText: 0 }, { 
+                duration: 2, 
+                innerText: endValue, 
+                snap: { innerText: 1e-2 }, // Allows floating point animation
+                ease: "power2.out" 
+            });
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".info-box strong").forEach((element) => {
+            let endValue = parseFloat(element.innerText);
+            gsap.fromTo(element, { innerText: 0 }, { 
+                duration: 2, 
+                innerText: endValue, 
+                snap: { innerText: 1e-2 }, // Allows floating point animation
+                ease: "power2.out" 
+            });
+        });
+    });
+
+        // Create background particles
+        function createParticles() {
+            const particlesContainer = document.createElement('div');
+            particlesContainer.style.position = 'fixed';
+            particlesContainer.style.top = '0';
+            particlesContainer.style.left = '0';
+            particlesContainer.style.width = '100%';
+            particlesContainer.style.height = '100%';
+            particlesContainer.style.pointerEvents = 'none';
+            particlesContainer.style.zIndex = '-1';
+            document.body.appendChild(particlesContainer);
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 50 + 3 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.backgroundColor = 'rgba(67, 212, 128, ' + (Math.random() * 0.2 + 0.1) + ')';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                
+                resetParticle(particle);
+                particlesContainer.appendChild(particle);
+                animateParticle(particle);
+            }
+        }
+
+        function resetParticle(particle) {
+            particle.style.top = Math.random() * 100 + 'vh';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.opacity = '0';
+        }
+
+        function animateParticle(particle) {
+            const duration = Math.random() * 30 + 20;
+            const startY = parseFloat(particle.style.top);
+            
+            gsap.to(particle, {
+                y: -startY - 200,
+                x: (Math.random() - 0.5) * 200,
+                opacity: 0.99,
+                duration: duration / 2,
+                ease: "power1.out",
+                onComplete: () => {
+                    gsap.to(particle, {
+                        opacity: 0,
+                        duration: duration / 2,
+                        onComplete: () => {
+                            resetParticle(particle);
+                            animateParticle(particle);
+                        }
+                    });
+                }
+            });
+        }
+    </script>
 </body>
 </html>
