@@ -93,10 +93,9 @@ vector<int> findDegeneracyOrdering(int vertices) {
 
     return ordering;
 }
-void bronKerboschPivot(set<int> R, set<int> P, set<int> X,int& count/*reference here coz we are making changes in the count variable in bronkerboschdegeneracy method*/) {
-    //if there are no common elements and we are only left with all vertices with degree>=d, we say that is maximal clique
-    if (P.empty() && X.empty())
-    {
+
+void bronKerboschPivot(set<int> R, set<int>& P, set<int>& X, int& count) {
+    if (P.empty() && X.empty()) {
         int cliqueSize = R.size();
         maxCliqueSize = max(maxCliqueSize, cliqueSize);
         cliqueSizeDistribution[cliqueSize]++;
@@ -104,111 +103,86 @@ void bronKerboschPivot(set<int> R, set<int> P, set<int> X,int& count/*reference 
         count++;
         return;
     }
-    //we use pivoting to randomly pick the top element of the set so that we stop recursive calls when we reach there
-    int pivot=*P.begin();
-    for (int v : P)
-        if (graph.at(v).size()>graph.at(pivot).size())
-            pivot=v;
-    set<int> non_neighbors;
-    for (int v : P)
-        if (graph.find(pivot) != graph.end() && find(graph.at(pivot).begin(), graph.at(pivot).end(), v) == graph.at(pivot).end())
-            non_neighbors.insert(v);
-    //below is same as bronKerboschDegeneracy ka recursive step
-    for (int v : non_neighbors) {
-        set<int> newR=R;
-        set<int> newP,newX;
-        newR.insert(v);
-        for (int u : graph.at(v))
-        {
-            if (P.count(u))
-                newP.insert(u);
-            if (X.count(u))
-                newX.insert(u);
+
+    // Find pivot with maximum neighbors
+    int pivot = -1;
+    int maxNeighbors = -1;
+    for (int v : P) {
+        int neighborCount = graph[v].size();
+        if (neighborCount > maxNeighbors) {
+            maxNeighbors = neighborCount;
+            pivot = v;
         }
-        bronKerboschPivot(newR,newP,newX,count);
-        P.erase(v);
+    }
+
+    // Use iterator-based traversal
+    for (auto it = P.begin(); it != P.end();) {
+        int v = *it;
+        
+        // Skip if v is connected to pivot
+        if (pivot != -1 && graph[pivot].find(v) != graph[pivot].end()) {
+            ++it;
+            continue;
+        }
+        
+        // Create new R with v
+        set<int> newR = R;
+        newR.insert(v);
+        
+        // Create new P and X sets
+        set<int> newP, newX;
+        const auto& neighbors = graph[v];
+        
+        // Find neighbors in P and X using set operations
+        for (const int& u : P) {
+            if (u != v && neighbors.find(u) != neighbors.end()) {
+                newP.insert(u);
+            }
+        }
+        
+        for (const int& u : X) {
+            if (neighbors.find(u) != neighbors.end()) {
+                newX.insert(u);
+            }
+        }
+        
+        bronKerboschPivot(newR, newP, newX, count);
+        
+        // Move v from P to X using iterators
+        it = P.erase(it);
         X.insert(v);
     }
 }
 
-int bronKerboschDegeneracy(int vertices)//& only because giving pointer deferenceing exception
-{
-
-    //first we find degeneracy ordering which will be passed as input to bronKerboschpivoting function
-    vector<int> ordering=findDegeneracyOrdering(vertices);
-    set<int> P,R,X; //used vector first but should eliminate duplicates so set best option
+int bronKerboschDegeneracy(int vertices) {
+    vector<int> ordering = findDegeneracyOrdering(vertices);
+    set<int> P, R, X;
     for (int v : ordering) {
         P.insert(v);
     }
-    int count=0;//only prints total number of cliques
+    int count = 0;
 
-    for (int i = 0; i < ordering.size(); i++)
-    {
+    for (int i = 0; i < ordering.size(); i++) {
         set<int> newP, newX;
-        if (graph.find(ordering[i]) != graph.end())
-        {
-            for (int u : graph.at(ordering[i]))
-            {
-                if (P.count(u))
-                    newP.insert(u);
-                if (X.count(u))
-                    newX.insert(u);
-            }
+        int current = ordering[i];
+        
+        // Skip redundant graph.find() check since we know the vertex exists
+        for (int u : graph[current]) {
+            if (P.count(u)) newP.insert(u);
+            if (X.count(u)) newX.insert(u);
         }
-        bronKerboschPivot({ordering[i]}, newP, newX,count);
-        P.erase(ordering[i]);
-        X.insert(ordering[i]);
-                if (P.count(u))
-                    newP.insert(u);
-                if (X.count(u))
-                    newX.insert(u);
-            }
-        }
-        bronKerboschPivot({ordering[i]}, newP, newX,count);
-        P.erase(ordering[i]);
-        X.insert(ordering[i]);
+        
+        bronKerboschPivot({current}, newP, newX, count);
+        P.erase(current);
+        X.insert(current);
     }
     return count;
 }
 
 int main() {
     auto start = chrono::high_resolution_clock::now();
-    int choice;
-    cout<<"Enter the dataset number : \n1 for Enron email network\n2 for Wiki-Vote network \n3 for Skitter\n";
-    cin>>choice;
     ifstream inputFile;
-    if(choice==1)
-    }
-    return count;
-}
-
-int main() {
-    auto start = chrono::high_resolution_clock::now();
-    int choice;
-    cout<<"Enter the dataset number : \n1 for Enron email network\n2 for Wiki-Vote network \n3 for Skitter\n";
-    cin>>choice;
-    ifstream inputFile;
-    if(choice==1)
-    {
-        inputFile.open("./datasets/wiki-Vote.txt");
-        string line;
-        for(int i = 0; i < 4; i++)
-            getline(inputFile, line);
-    }
-    else if(choice==2)
-    {
-        inputFile.open("./datasets/email-Enron.txt");
-        string line;
-        for(int i = 0; i < 4; i++)
-            getline(inputFile, line);
-    }
-    else
-    {
-        inputFile.open("./datasets/as-skitter.txt");
-        string line;
-        for(int i = 0; i < 5; i++)
-            getline(inputFile, line);
-    }
+    inputFile.open("./datasets/email-Enron.txt");
     int u, v;maxCliqueSize = 0;numCliques = 0;cliqueSizeDistribution.clear();
     if (inputFile.is_open()) {
         while (inputFile >> u >> v) {
@@ -219,8 +193,6 @@ int main() {
         }
         inputFile.close();
     }
-    cout << "Nodes: " << nodes.size() << endl;
-    cout << "Edges: " << graph.size() << endl;
     int totalCliques = bronKerboschDegeneracy(nodes.size());
     auto end = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = end - start;

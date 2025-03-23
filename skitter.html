@@ -33,7 +33,7 @@
         }
         
         .container {
-            max-width: 12000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -52,33 +52,7 @@
             align-items: center;
             padding: 0 20px;
         }
-        button {
-                background: var(--primary-color);
-                color: #dd1919;
-                border: none;
-                padding: 15px 30px;
-                /* Increased padding */
-                font-size: 18px;
-                /* Increased font size */
-                font-weight: 600;
-                border-radius: 8px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                width: 250px;
-                /* Fixed width */
-                margin: 10px 0;
-                /* Added margin between buttons */
-            }
-
-            .btn-container {
-                margin-top: 20px;
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
-                /* Space between buttons */
-            }
+        
         .logo {
             font-family: 'Montserrat', sans-serif;
             font-size: 28px;
@@ -222,7 +196,7 @@
         }
         
         button:hover {
-            background-color: #058a3a;
+            background-color: #3bc070;
         }
         
         #answer {
@@ -276,7 +250,7 @@
         }
         
         .info-box {
-            background-color: #f5f5f5;
+            background-color: #1E1E1E;
             color: #333;
             flex: 1;
             padding: 15px;
@@ -288,14 +262,23 @@
         }
         
         .info-box p {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: #666;
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
         }
         
         .info-box strong {
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
             font-size: 1rem;
-            color: #333;
         }
         
         .dataset-description {
@@ -342,17 +325,18 @@
         }
         
         .chart-container img {
+            max-width: 90%;
+            height: auto;
+        }
+
+        .chart-container img.skitter {
             max-width: 100%;
             height: auto;
         }
+
         
-        .error-message {
-            color: #ff4040;
-            text-align: center;
-            padding: 10px;
-            font-weight: 500;
-        }
         
+
         @media (max-width: 768px) {
             .banner h1 {
                 font-size: 2.5rem;
@@ -382,64 +366,49 @@
             <a href="#" class="logo">CS F364  -  <span>Design and Analysis of Algorithms</span></a>
         </div>
     </header>
-    
-    <section class="banner">
-        <div class="container">
-            <h1>Assignment - 1</h1>
-            <h2>Maximal Clique Enumeration</h2>
+    <section class="dataset-section">
+        <div class="dataset-header">
+            Skitter Dataset
+        </div>
+        <div class="dataset-info">
+            <div class="info-box">
+                <p>Nodes</p>
+                <strong>1696415</strong>
+            </div>
+            <div class="info-box">
+                <p>Edges</p>
+                <strong>11095298</strong>
+            </div>
+        </div>
+        <div class="algorithm-performance">
+            <h4>Algorithm Performance</h4>
+            <div class="performance-stats">
+                <div class="stat">
+                    <p>ELS</p>
+                    <strong>3.65s</strong>
+                </div>
+                <div class="stat">
+                    <p>Tomita</p>
+                    <strong>379.6s</strong>
+                </div>
+                <div class="stat">
+                    <p>Arboricity</p>
+                    <strong>N/A</strong>
+                </div>
+                
+            </div>
+            <table>
+                <tr>
+                    <td><div class="chart-container">
+                        <img src="./static/skitter.jpeg" alt="Enron Email Dataset Performance Chart">
+                    </div></td>
+                    <td><div class="chart-container">
+                        <img class="skitter" src="./static/SkitterCliques.jpeg" alt="Enron Email Dataset Performance Chart">
+                    </div></td>
+                </tr>
+            </table>
+            
         </div>
     </section>
-    
-    <main class="container">
-        <table class="outer">
-            <tr>
-                <td>
-                    <section class="team-section">
-                        <h3>Team Members</h3>
-                        <table>
-                            <tr>
-                                <th>Name</th>
-                                <th>ID</th>
-                            </tr>
-                            <tr>
-                                <td>MOHAMMAD JAMBUGHODAWALA</td>
-                                <td>2022A7PS0044H</td>
-                            </tr>
-                            <tr>
-                                <td>BHASKARA HEMANTH KARTHIKEYA GANTI</td>
-                                <td>2022A7PS0053H</td>
-                            </tr>
-                            <tr>
-                                <td>HARSH VIKRAM JAJODIA</td>
-                                <td>2022A7PS0171H</td>
-                            </tr>
-                            <tr>
-                                <td>VAISHNAV DEVAGUPTAPU</td>
-                                <td>2022A7PS0085H</td>
-                            </tr>
-                            <tr>
-                                <td>ANSHUL GOPAL</td>
-                                <td>2022A7PS0009H</td>
-                            </tr>
-                        </table>
-                    </section>
-                </td>
-                <td>
-                    <section class="algorithms">
-                        <div class="btn-container">
-                            <button onclick="location.href='enron.html'">Enron Mail</button>
-                            <button onclick="location.href='skitter.html'">Skitter</button>
-                            <button onclick="location.href='wikivote.html'">Wiki Vote</button>
-                            <button onclick="window.open('https://github.com/HemanthK-12/Daa-Assign', '_blank')">Github Repo</button>
-                            <button onclick="location.href='./static/Report.pdf'">Project Report</button>
-                        </div>
-                    </section>
-                </td>
-            </tr>
-
-        </table>
-
-    </main>
-    
 </body>
 </html>
