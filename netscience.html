@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAA Assignment-2</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-color: #43d480;
+            --secondary-color: #0d953f;
+            --background-color: #121212;
+            --card-background: #1e1e1e;
+            --text-color: #e0e0e0;
+            --border-color: #333333;
+            --gradient-color: linear-gradient(135deg, #0d953f, #43d480);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            padding: 0;
+            margin: 0;
+        }
+        p{
+            color: var(--primary-color);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: #000000;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--primary-color);
+            margin-left: 5px;
+        }
+        
+        .banner {
+            background: var(--gradient-color);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .banner h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .banner h2 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+        
+        main {
+            padding: 40px 0;
+        }
+        
+        .team-section {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+        }
+        
+        table, th, td {
+            border: 1px solid var(--border-color);
+        }
+        
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        .first{
+            font-weight: 500;
+            background-color: #207c48;
+            
+        }
+        th {
+            font-weight: 500;
+            background-color: rgba(13, 149, 63, 0.1);
+        }
+        
+        tr:last-child td:first-child {
+            border-bottom-left-radius: 8px;
+        }
+        
+        tr:last-child td:last-child {
+            border-bottom-right-radius: 8px;
+        }
+        
+        tr:first-child th:first-child {
+            border-top-left-radius: 8px;
+        }
+        
+        tr:first-child th:last-child {
+            border-top-right-radius: 8px;
+        }
+        
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        
+        .input-section {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            resize: vertical;
+            background-color: #2a2a2a;
+            color: var(--text-color);
+        }
+        
+        .btn-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        button {
+            background: var(--primary-color);
+            color: #121212;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #3bc070;
+        }
+        
+        #answer {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-top: 20px;
+        }
+        
+        footer {
+            background-color: #000000;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            font-size: 14px;
+        }
+        
+        .footer-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        /* Dataset sections styles */
+        .dataset-section {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .dataset-header {
+            background-color: #121212;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .dataset-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .info-box {
+            background-color: #1E1E1E;
+            color: #333;
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .info-box p {
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        .info-box strong {
+            background-color: #1E1E1E;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .dataset-description {
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .algorithm-performance {
+            padding: 10px 20px;
+            text-align: center;
+        }
+        
+        .algorithm-performance h4 {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .performance-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat p {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .stat strong {
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+        
+        .chart-container {
+            margin: 0 auto;
+            max-width: 100%;
+            text-align: center;
+        }
+        
+        .chart-container img {
+            max-width: 90%;
+            height: auto;
+        }
+
+        .chart-container img.skitter {
+            max-width: 100%;
+            height: auto;
+        }
+
+        
+        
+
+        @media (max-width: 768px) {
+            .banner h1 {
+                font-size: 2.5rem;
+            }
+            
+            .banner h2 {
+                font-size: 1.5rem;
+            }
+            
+            th, td {
+                padding: 10px;
+            }
+            
+            .performance-stats {
+                flex-direction: column;
+            }
+            
+            .stat {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">CS F364  -  <span>Design and Analysis of Algorithms</span></a>
+        </div>
+    </header>
+    <section class="dataset-section">
+        <div class="dataset-header">
+            NetScience Dataset
+        </div>
+        <div class="dataset-info">
+            <div class="info-box">
+                <p>Nodes</p>
+                <strong>1589</strong>
+            </div>
+            <div class="info-box">
+                <p>Edges</p>
+                <strong>2742</strong>
+            </div>
+        </div>
+        <div class="algorithm-performance">
+            <h4>Algorithm Performance(sec)</h4>
+            <div class="performance-stats">
+                <div class="stat">
+                    <strong>Exact (Algo-1)</strong>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <td class="first"><div class="chart-container">
+                        <strong>Clique Number</strong> 
+                    </div></td>
+                    <td class="first"><div class="chart-container">
+                        h=2
+                    </div></td>
+                    <td class="first"><div class="chart-container">
+                        h=3
+                    </div></td>
+                    <td class="first"><div class="chart-container">
+                        h=4
+                    </div></td>
+                </tr>
+                <tr>
+                    <td class="first"><div class="chart-container">
+                        <strong>Density</strong>
+                    </div></td>
+                    <td><div class="chart-container">
+                        9.5
+                    </div></td>
+                    <td><div class="chart-container">
+                        57
+                    </div></td>
+                    <td><div class="chart-container">
+                        242.25
+                    </div></td>
+                </tr>
+                <tr>
+                    <td class="first"><div class="chart-container">
+                        <strong>Execution Time</strong>
+                    </div></td>
+                    <td><div class="chart-container">
+                        0.0715623 s
+                    </div></td>
+                    <td><div class="chart-container">
+                        0.208897 s
+                    </div></td>
+                    <td><div class="chart-container">
+                        0.680354 s
+                    </div></td>
+                </tr>
+            </table>
+            <div class="performance-stats">
+                <div class="stat">
+                    <strong>CoreExact (Algo-4)</strong>
+                </div>
+            </div>
+            <table>
+                <tr>
+                    <td class="first"><div class="chart-container">
+                        Clique Number 
+                    </div></td>
+                    <td class="first"><div class="chart-container">
+                        h=2
+                    </div></td>
+                    <td class="first"><div class="chart-container">
+                        h=3
+                    </div></td>
+                    <td class="first"><div class="chart-container">
+                        h=4
+                    </div></td>
+                </tr>
+                <tr>
+                    <td class="first"><div class="chart-container">
+                        Density
+                    </div></td>
+                    <td><div class="chart-container">
+                        9.5
+                    </div></td>
+                    <td><div class="chart-container">
+                        57
+                    </div></td>
+                    <td><div class="chart-container">
+                        242.3
+                    </div></td>
+                </tr>
+                <tr>
+                    <td class="first"><div class="chart-container">
+                        Execution Time
+                    </div></td>
+                    <td><div class="chart-container">
+                        18.57 s
+                    </div></td>
+                    <td><div class="chart-container">
+                        70.8944 s
+                    </div></td>
+                    <td><div class="chart-container">
+                        917.63s
+                    </div></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <td><div class="chart-container">
+                        <img src="./static/netscience.png" alt="Netscience">
+                    </div></td>
+                </tr>
+            </table>
+            
+        </div>
+    </section>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Performance stats animation
+            const stats = document.querySelectorAll('.stat');
+            gsap.fromTo(stats, 
+                { opacity: 0, y: 50 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    stagger: 0.2,
+                    duration: 0.7,
+                    ease: "power2.out",
+                    delay: 0.5
+                }
+            );
+
+            // Chart container animation
+            const charts = document.querySelectorAll('.chart-container');
+            gsap.fromTo(charts, 
+                { opacity: 0, scale: 0.8 },
+                { 
+                    opacity: 1, 
+                    scale: 1,
+                    duration: 1,
+                    ease: "back.out(1.7)",
+                    delay: 1
+                }
+            );
+
+            // Dataset info boxes animation
+            const infoBoxes = document.querySelectorAll('.info-box');
+            gsap.fromTo(infoBoxes, 
+                { opacity: 0, y: 30 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    stagger: 0.2,
+                    duration: 0.7,
+                    ease: "power2.out",
+                    delay: 0.3
+                }
+            );
+
+            // Glow effect for dataset section
+            const datasetSection = document.querySelector('.dataset-section');
+            gsap.to(datasetSection, {
+                boxShadow: '0 0 20px rgba(67, 212, 128, 0.5)',
+                duration: 2,
+                repeat: -1,
+                yoyo: true
+            });
+
+            // Background particles
+            createParticles();
+        });
+    //     document.addEventListener("DOMContentLoaded", function() {
+    //     document.querySelectorAll(".stat strong").forEach((element) => {
+    //         let endValue = parseFloat(element.innerText);
+    //         gsap.fromTo(element, { innerText: 0 }, { 
+    //             duration: 2, 
+    //             innerText: endValue, 
+    //             snap: { innerText: 1e-2 }, // Allows floating point animation
+    //             ease: "power2.out" 
+    //         });
+    //     });
+    // });
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     document.querySelectorAll(".info-box strong").forEach((element) => {
+    //         let endValue = parseFloat(element.innerText);
+    //         gsap.fromTo(element, { innerText: 0 }, { 
+    //             duration: 2, 
+    //             innerText: endValue, 
+    //             snap: { innerText: 1e-2 }, // Allows floating point animation
+    //             ease: "power2.out" 
+    //         });
+    //     });
+    // });
+        // Create background particles
+        function createParticles() {
+            const particlesContainer = document.createElement('div');
+            particlesContainer.style.position = 'fixed';
+            particlesContainer.style.top = '0';
+            particlesContainer.style.left = '0';
+            particlesContainer.style.width = '100%';
+            particlesContainer.style.height = '100%';
+            particlesContainer.style.pointerEvents = 'none';
+            particlesContainer.style.zIndex = '-1';
+            document.body.appendChild(particlesContainer);
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 50 + 3 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.backgroundColor = 'rgba(67, 212, 128, ' + (Math.random() * 0.2 + 0.1) + ')';
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                
+                resetParticle(particle);
+                particlesContainer.appendChild(particle);
+                animateParticle(particle);
+            }
+        }
+
+        function resetParticle(particle) {
+            particle.style.top = Math.random() * 100 + 'vh';
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.opacity = '0';
+        }
+
+        function animateParticle(particle) {
+            const duration = Math.random() * 30 + 20;
+            const startY = parseFloat(particle.style.top);
+            
+            gsap.to(particle, {
+                y: -startY - 200,
+                x: (Math.random() - 0.5) * 200,
+                opacity: 0.99,
+                duration: duration / 2,
+                ease: "power1.out",
+                onComplete: () => {
+                    gsap.to(particle, {
+                        opacity: 0,
+                        duration: duration / 2,
+                        onComplete: () => {
+                            resetParticle(particle);
+                            animateParticle(particle);
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
